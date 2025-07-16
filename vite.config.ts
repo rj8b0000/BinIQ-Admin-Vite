@@ -13,4 +13,11 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  base: "/", // Adjust to '/my-app/' if deploying to a subfolder
+  build: {
+    outDir: "dist", // Default output directory
+    minify: true, // Enable minification for production
+    sourcemap: false, // Disable sourcemaps in production for smaller builds
+    target: "esnext", // Target modern browsers (adjust if needed for older browsers)
+  },
 });

@@ -433,7 +433,7 @@ export default function Feedback() {
                 <div className="flex items-center gap-2 mb-2">
                   <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                   <span className="font-medium">
-                    {selectedFeedback.rating}/5
+                    {typeof selectedFeedback.rating === 'number' && !isNaN(selectedFeedback.rating) ? selectedFeedback.rating : 0}/5
                   </span>
                 </div>
                 <p className="text-sm text-muted-foreground">

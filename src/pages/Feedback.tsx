@@ -92,7 +92,7 @@ export default function Feedback() {
         // Map API data to FeedbackItem
         const mappedFeedbacks: FeedbackItem[] = data.map((fb, index) => ({
           _id: fb._id,
-          rating: fb.rating,
+          rating: typeof fb.rating === 'number' && !isNaN(fb.rating) ? fb.rating : 0,
           username: fb.user_name,
           userType: fb.type === "store_owner" ? "Store Owner" : "Reseller",
           message: fb.suggestion,
@@ -109,7 +109,7 @@ export default function Feedback() {
           totalFeedback > 0
             ? Number(
                 (
-                  mappedFeedbacks.reduce((sum, f) => sum + f.rating, 0) /
+                  mappedFeedbacks.reduce((sum, f) => sum + (typeof f.rating === 'number' && !isNaN(f.rating) ? f.rating : 0), 0) /
                   totalFeedback
                 ).toFixed(1)
               )
@@ -237,7 +237,7 @@ export default function Feedback() {
       render: (_, row) => (
         <div className="flex items-center gap-1">
           <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-          <span className="font-medium">{row.rating}/5</span>
+          <span className="font-medium">{typeof row.rating === 'number' && !isNaN(row.rating) ? row.rating : 0}/5</span>
         </div>
       ),
     },
@@ -350,7 +350,7 @@ export default function Feedback() {
                   </p>
                   <div className="flex items-center gap-1">
                     <p className="text-2xl font-bold text-biniq-navy">
-                      {isLoading ? "Loading..." : stats.averageRating}
+                      {isLoading ? "Loading..." : (typeof stats.averageRating === 'number' && !isNaN(stats.averageRating) ? stats.averageRating : 0)}
                     </p>
                     {!isLoading && (
                       <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
@@ -517,7 +517,7 @@ export default function Feedback() {
                       <div className="flex items-center gap-1">
                         <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                         <span className="font-medium">
-                          {selectedFeedback.rating}/5
+                          {typeof selectedFeedback.rating === 'number' && !isNaN(selectedFeedback.rating) ? selectedFeedback.rating : 0}/5
                         </span>
                       </div>
                     </div>

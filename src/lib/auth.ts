@@ -45,15 +45,15 @@ export class AuthService {
     // If we're in production or deployed environment, use the production API
     if (window.location.hostname.includes('fly.dev') ||
         window.location.hostname !== 'localhost') {
-      return "https://api.biniq.net/api";
+      return "https://api.biniq.net";
     }
     // Otherwise use the environment variable or localhost
-    return import.meta.env.VITE_API_URL || "http://localhost:3001/api";
+    return import.meta.env.VITE_API_URL || "http://localhost:3001";
   })();
 
   static async login(credentials: LoginRequest): Promise<LoginResponse> {
     try {
-      const response = await fetch(`${this.API_BASE_URL}/users/login`, {
+      const response = await fetch(`${this.API_BASE_URL}/api/users/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

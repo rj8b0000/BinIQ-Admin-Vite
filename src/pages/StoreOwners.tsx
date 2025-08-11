@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { AuthService } from "../lib/auth";
+import { API_CONFIG } from "../lib/api";
 
 // Define interfaces for API responses
 interface StoreOwner {

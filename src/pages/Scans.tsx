@@ -11,7 +11,7 @@ import { Textarea } from "../components/ui/textarea";
 import { toast } from "../hooks/use-toast";
 import { AuthService } from "../lib/auth";
 import { API_CONFIG } from "../lib/api";
-import { AdminLayout } from "../components/AdminLayout";
+import AdminLayout from "../components/AdminLayout";
 import { Eye, Edit3, Check, X, Download, History, FileImage, Calendar, User, Tag, DollarSign } from "lucide-react";
 
 interface ScanItem {

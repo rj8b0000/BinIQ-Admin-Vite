@@ -198,7 +198,7 @@ const feedbackColumns: Column<Feedback>[] = [
     render: (value) => (
       <div className="flex items-center gap-1">
         <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-        <span>{value}</span>
+        <span>{value || "N/A"}</span>
       </div>
     ),
   },
@@ -207,8 +207,8 @@ const feedbackColumns: Column<Feedback>[] = [
     header: "Message",
     searchable: true,
     render: (value) => (
-      <div className="max-w-xs truncate" title={value}>
-        {value}
+      <div className="max-w-xs truncate" title={value || ""}>
+        {value || "No message"}
       </div>
     ),
   },
@@ -216,14 +216,14 @@ const feedbackColumns: Column<Feedback>[] = [
     key: "created_at",
     header: "Date",
     sortable: true,
-    render: (value) => new Date(value).toLocaleDateString(),
+    render: (value) => value ? new Date(value).toLocaleDateString() : "N/A",
   },
   {
     key: "status",
     header: "Status",
     render: (value) => (
       <Badge variant={value === "replied" ? "default" : "destructive"}>
-        {value.charAt(0).toUpperCase() + value.slice(1)}
+        {value ? value.charAt(0).toUpperCase() + value.slice(1) : "Unknown"}
       </Badge>
     ),
   },

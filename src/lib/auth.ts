@@ -39,8 +39,17 @@ interface LoginRequest {
 export class AuthService {
   private static readonly TOKEN_KEY = "biniq_admin_token";
   private static readonly USER_KEY = "biniq_admin_user";
-  private static readonly API_BASE_URL =
-    import.meta.env.VITE_API_URL || "http://localhost:3001/api";
+
+  // Detect environment and use appropriate API URL
+  private static readonly API_BASE_URL = (() => {
+    // If we're in production or deployed environment, use the production API
+    if (window.location.hostname.includes('fly.dev') ||
+        window.location.hostname !== 'localhost') {
+      return "https://bin-iq-backend.vercel.app/api";
+    }
+    // Otherwise use the environment variable or localhost
+    return import.meta.env.VITE_API_URL || "http://localhost:3001/api";
+  })();
 
   static async login(credentials: LoginRequest): Promise<LoginResponse> {
     try {

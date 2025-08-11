@@ -148,23 +148,35 @@ export class AuthService {
     url: string,
     options: RequestInit = {},
   ): Promise<Response> {
-    const headers = {
-      ...this.getAuthHeaders(),
-      ...options.headers,
-    };
+    try {
+      const headers = {
+        ...this.getAuthHeaders(),
+        ...options.headers,
+      };
 
-    const response = await fetch(url, {
-      ...options,
-      headers,
-    });
+      console.log('Making request to:', url); // Debug log
+      console.log('Using API base URL:', this.API_BASE_URL); // Debug log
 
-    // If unauthorized, logout and redirect
-    if (response.status === 401) {
-      this.logout();
-      window.location.href = "/login";
+      const response = await fetch(url, {
+        ...options,
+        headers,
+      });
+
+      // If unauthorized, logout and redirect
+      if (response.status === 401) {
+        this.logout();
+        window.location.href = "/login";
+      }
+
+      return response;
+    } catch (error) {
+      console.error('Request failed:', error);
+      console.error('URL attempted:', url);
+      console.error('API Base URL:', this.API_BASE_URL);
+
+      // Re-throw with more context
+      throw new Error(`Failed to connect to API at ${url}. Error: ${error.message}`);
     }
-
-    return response;
   }
 }
 

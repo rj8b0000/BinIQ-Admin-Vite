@@ -132,67 +132,68 @@ export default function AdvancedDashboard() {
 
       const baseUrl = API_CONFIG.BASE_URL;
 
-      // Fetch all data concurrently
+      // Helper function to safely fetch data with fallback
+      const safeApiCall = async (url: string, fallback: any) => {
+        try {
+          const response = await AuthService.makeAuthenticatedRequest(url);
+          if (response.ok) {
+            const data = await response.json();
+            return data.data || fallback;
+          }
+          return fallback;
+        } catch (error) {
+          console.warn(`API call failed for ${url}, using fallback data:`, error);
+          return fallback;
+        }
+      };
+
+      // Fetch data with individual error handling and fallbacks
       const [
-        userGrowthRes,
-        trendsRes,
-        revenueBreakdownRes,
-        sentimentRes,
-        goalsRes,
-        trendingRes,
-        quickStatsRes,
-        activityRes,
+        userGrowthData,
+        trendsData,
+        revenueData,
+        sentimentData,
+        goalsData,
+        trendingData,
+        quickStatsData,
+        activityData,
       ] = await Promise.all([
-        AuthService.makeAuthenticatedRequest(`${baseUrl}${API_CONFIG.ENDPOINTS.ANALYTICS.USER_GROWTH}`),
-        AuthService.makeAuthenticatedRequest(`${baseUrl}${API_CONFIG.ENDPOINTS.ANALYTICS.STORE_RESELLER_TRENDS}`),
-        AuthService.makeAuthenticatedRequest(`${baseUrl}${API_CONFIG.ENDPOINTS.ANALYTICS.REVENUE_BREAKDOWN}`),
-        AuthService.makeAuthenticatedRequest(`${baseUrl}${API_CONFIG.ENDPOINTS.ANALYTICS.SENTIMENT_TRENDS}`),
-        AuthService.makeAuthenticatedRequest(`${baseUrl}${API_CONFIG.ENDPOINTS.ANALYTICS.GOALS_PROGRESS}`),
-        AuthService.makeAuthenticatedRequest(`${baseUrl}${API_CONFIG.ENDPOINTS.TRENDING}`),
-        AuthService.makeAuthenticatedRequest(`${baseUrl}${API_CONFIG.ENDPOINTS.STATS.QUICK_STATS}`),
-        AuthService.makeAuthenticatedRequest(`${baseUrl}${API_CONFIG.ENDPOINTS.STATS.RECENT_ACTIVITY}`),
+        safeApiCall(`${baseUrl}${API_CONFIG.ENDPOINTS.ANALYTICS.USER_GROWTH}`, generateMockUserGrowth()),
+        safeApiCall(`${baseUrl}${API_CONFIG.ENDPOINTS.ANALYTICS.STORE_RESELLER_TRENDS}`, []),
+        safeApiCall(`${baseUrl}${API_CONFIG.ENDPOINTS.ANALYTICS.REVENUE_BREAKDOWN}`, generateMockRevenueBreakdown()),
+        safeApiCall(`${baseUrl}${API_CONFIG.ENDPOINTS.ANALYTICS.SENTIMENT_TRENDS}`, generateMockSentimentData()),
+        safeApiCall(`${baseUrl}${API_CONFIG.ENDPOINTS.ANALYTICS.GOALS_PROGRESS}`, {
+          userGoal: 1000,
+          userActual: 756,
+          revenueGoal: 50000,
+          revenueActual: 42500,
+        }),
+        safeApiCall(`${baseUrl}${API_CONFIG.ENDPOINTS.TRENDING}`, generateMockTrending()),
+        safeApiCall(`${baseUrl}${API_CONFIG.ENDPOINTS.STATS.QUICK_STATS}`, {
+          totalUsers: 2456,
+          totalRevenue: 125000,
+          monthlyGrowth: 12.5,
+          avgSentiment: 4.2,
+        }),
+        safeApiCall(`${baseUrl}${API_CONFIG.ENDPOINTS.STATS.RECENT_ACTIVITY}`, generateMockActivity()),
       ]);
 
-      // Check if all responses are ok
-      const responses = [userGrowthRes, trendsRes, revenueBreakdownRes, sentimentRes, goalsRes, trendingRes, quickStatsRes, activityRes];
-      const failedResponse = responses.find(res => !res.ok);
-      if (failedResponse) {
-        throw new Error(`HTTP error! status: ${failedResponse.status}`);
-      }
+      // Set data (all will have fallbacks)
+      setUserGrowthData(userGrowthData);
+      setRevenueBreakdown(revenueData);
+      setSentimentData(sentimentData);
+      setGoalsProgress(goalsData);
+      setTrendingItems(trendingData);
+      setRecentActivity(activityData);
+      setQuickStats(quickStatsData);
 
-      // Parse responses
-      const userGrowthData = await userGrowthRes.json();
-      const trendsData = await trendsRes.json();
-      const revenueData = await revenueBreakdownRes.json();
-      const sentimentResponse = await sentimentRes.json();
-      const goalsData = await goalsRes.json();
-      const trendingData = await trendingRes.json();
-      const quickStatsData = await quickStatsRes.json();
-      const activityData = await activityRes.json();
-
-      // Set data with fallbacks for demo purposes
-      setUserGrowthData(userGrowthData.data || generateMockUserGrowth());
-      setRevenueBreakdown(revenueData.data || generateMockRevenueBreakdown());
-      setSentimentData(sentimentResponse.data || generateMockSentimentData());
-      setGoalsProgress(goalsData.data || {
-        userGoal: 1000,
-        userActual: 756,
-        revenueGoal: 50000,
-        revenueActual: 42500,
-      });
-      setTrendingItems(trendingData.data || generateMockTrending());
-      setRecentActivity(activityData.data || generateMockActivity());
-      setQuickStats(quickStatsData.data || {
-        totalUsers: 2456,
-        totalRevenue: 125000,
-        monthlyGrowth: 12.5,
-        avgSentiment: 4.2,
-      });
+      // Show a subtle info message that we're using demo data
+      setError("Some API endpoints are not available. Displaying demo data for visualization.");
 
     } catch (err: any) {
       console.error("Error fetching dashboard data:", err);
       setError("Failed to load dashboard data. Using demo data.");
-      
+
       // Load mock data for demo
       setUserGrowthData(generateMockUserGrowth());
       setRevenueBreakdown(generateMockRevenueBreakdown());

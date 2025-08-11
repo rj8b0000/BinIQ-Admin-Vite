@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { AuthService } from "../lib/auth";
+import { API_CONFIG } from "../lib/api";
 
 // Define interfaces for API responses
 interface StoreOwner {
@@ -391,12 +392,19 @@ export default function StoreOwners() {
         setIsLoading(true);
         setError(null);
 
-        const baseUrl =
-          import.meta.env.VITE_API_URL ||
-          "https://bin-iq-backend.vercel.app/api";
+        // Use the API_CONFIG.BASE_URL for consistent URL handling
+        const baseUrl = API_CONFIG.BASE_URL;
+
+        console.log('StoreOwners: Using API URL:', baseUrl); // Debug log
+
         const response = await AuthService.makeAuthenticatedRequest(
-          `${baseUrl}/users/all-details-store-owner`
+          `${baseUrl}${API_CONFIG.ENDPOINTS.ALL_STORE_OWNERS}`
         );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data: StoreOwnersResponse = await response.json();
 
         if (!data.success) {
@@ -407,7 +415,10 @@ export default function StoreOwners() {
         setStoreOwners(data.data);
       } catch (err: any) {
         console.error("Error fetching store owners:", err);
-        setError("Failed to load store owners. Please try again.");
+        const errorMessage = err.message.includes('Failed to connect')
+          ? `Cannot connect to API. Using URL: ${baseUrl}. ${err.message}`
+          : "Failed to load store owners. Please try again.";
+        setError(errorMessage);
       } finally {
         setIsLoading(false);
       }
@@ -421,8 +432,7 @@ export default function StoreOwners() {
     action: "approve" | "reject" | "delete",
     userId: string
   ) => {
-    const baseUrl =
-      import.meta.env.VITE_API_URL || "https://bin-iq-backend.vercel.app/api";
+    const baseUrl = API_CONFIG.BASE_URL;
     try {
       let response: Response;
       if (action === "delete") {

@@ -17,9 +17,26 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../components/ui/dialog";
-import { MessageSquare, Star, Reply, Eye } from "lucide-react";
+import { MessageSquare, Star, Reply, Eye, TrendingUp, PieChart, BarChart3, Smile, Meh, Frown } from "lucide-react";
 import { useState, useEffect } from "react";
 import { AuthService } from "../lib/auth";
+import { API_CONFIG } from "../lib/api";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
+import {
+  PieChart as RechartsPieChart,
+  Pie,
+  Cell,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+} from "recharts";
 
 interface FeedbackItem {
   _id: string;
@@ -28,6 +45,8 @@ interface FeedbackItem {
   userType: "Store Owner" | "Reseller"; // Maps to type
   message: string; // Maps to suggestion
   email: string; // Maps to user_email
+  sentiment?: "positive" | "neutral" | "negative";
+  sentimentScore?: number;
   date: string; // Maps to created_at
   replied: boolean; // Maps to status ("replied" | "pending")
   reply: string | null; // Maps to reply
@@ -55,6 +74,20 @@ interface FeedbackStats {
   repliedCount: number;
 }
 
+interface SentimentStats {
+  positive: number;
+  neutral: number;
+  negative: number;
+}
+
+interface SentimentTrend {
+  month: string;
+  positive: number;
+  neutral: number;
+  negative: number;
+  averageRating: number;
+}
+
 export default function Feedback() {
   const [feedbacks, setFeedbacks] = useState<FeedbackItem[]>([]);
   const [selectedFeedback, setSelectedFeedback] = useState<FeedbackItem | null>(
@@ -62,6 +95,12 @@ export default function Feedback() {
   );
   const [replyDialogOpen, setReplyDialogOpen] = useState(false);
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
+  const [sentimentStats, setSentimentStats] = useState<SentimentStats>({
+    positive: 0,
+    neutral: 0,
+    negative: 0,
+  });
+  const [sentimentTrends, setSentimentTrends] = useState<SentimentTrend[]>([]);
   const [replyMessage, setReplyMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -72,6 +111,57 @@ export default function Feedback() {
     repliedCount: 0,
   });
 
+  // Helper functions for sentiment analysis
+  const analyzeSentiment = (text: string, rating: number): { label: "positive" | "neutral" | "negative", score: number } => {
+    // Simple sentiment analysis based on rating and keywords
+    const positiveWords = ["good", "great", "excellent", "amazing", "love", "perfect", "fantastic", "wonderful"];
+    const negativeWords = ["bad", "terrible", "awful", "hate", "worst", "horrible", "disappointing", "useless"];
+
+    const lowerText = text.toLowerCase();
+    const positiveCount = positiveWords.filter(word => lowerText.includes(word)).length;
+    const negativeCount = negativeWords.filter(word => lowerText.includes(word)).length;
+
+    let sentiment: "positive" | "neutral" | "negative";
+    let score: number;
+
+    if (rating >= 4 || positiveCount > negativeCount) {
+      sentiment = "positive";
+      score = rating >= 4 ? rating / 5 : 0.7;
+    } else if (rating <= 2 || negativeCount > positiveCount) {
+      sentiment = "negative";
+      score = rating <= 2 ? (5 - rating) / 5 : 0.7;
+    } else {
+      sentiment = "neutral";
+      score = 0.5;
+    }
+
+    return { label: sentiment, score };
+  };
+
+  const calculateSentimentStats = (feedbacks: FeedbackItem[]): SentimentStats => {
+    const total = feedbacks.length;
+    if (total === 0) return { positive: 0, neutral: 0, negative: 0 };
+
+    const positive = feedbacks.filter(f => f.sentiment === "positive").length;
+    const negative = feedbacks.filter(f => f.sentiment === "negative").length;
+    const neutral = total - positive - negative;
+
+    return {
+      positive: Math.round((positive / total) * 100),
+      neutral: Math.round((neutral / total) * 100),
+      negative: Math.round((negative / total) * 100),
+    };
+  };
+
+  const generateMockTrends = (): SentimentTrend[] => [
+    { month: "Jan", positive: 65, neutral: 25, negative: 10, averageRating: 4.2 },
+    { month: "Feb", positive: 70, neutral: 22, negative: 8, averageRating: 4.3 },
+    { month: "Mar", positive: 68, neutral: 24, negative: 8, averageRating: 4.1 },
+    { month: "Apr", positive: 75, neutral: 20, negative: 5, averageRating: 4.5 },
+    { month: "May", positive: 72, neutral: 23, negative: 5, averageRating: 4.4 },
+    { month: "Jun", positive: 78, neutral: 18, negative: 4, averageRating: 4.6 },
+  ];
+
   // Fetch feedback data
   useEffect(() => {
     const fetchFeedbacks = async () => {
@@ -79,29 +169,37 @@ export default function Feedback() {
         setIsLoading(true);
         setError(null);
 
-        const baseUrl =
-          import.meta.env.VITE_API_URL ||
-          "https://bin-iq-backend.vercel.app/api";
+        const baseUrl = API_CONFIG.BASE_URL;
         const response = await AuthService.makeAuthenticatedRequest(
-          `${baseUrl}/users/feedback`
+          `${baseUrl}${API_CONFIG.ENDPOINTS.FEEDBACK}`
         );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data: FeedbackResponse[] = await response.json();
 
         console.log("Fetched feedbacks:", data); // Debug log
 
-        // Map API data to FeedbackItem
-        const mappedFeedbacks: FeedbackItem[] = data.map((fb, index) => ({
-          _id: fb._id,
-          rating: typeof fb.rating === 'number' && !isNaN(fb.rating) ? fb.rating : 0,
-          username: fb.user_name,
-          userType: fb.type === "store_owner" ? "Store Owner" : "Reseller",
-          message: fb.suggestion,
-          email: fb.user_email,
-          date: new Date(fb.created_at).toLocaleDateString(),
-          replied: fb.status === "replied",
-          reply: fb.reply,
-          user_id: fb.user_id,
-        }));
+        // Map API data to FeedbackItem with sentiment analysis
+        const mappedFeedbacks: FeedbackItem[] = data.map((fb, index) => {
+          const sentiment = analyzeSentiment(fb.suggestion, fb.rating);
+          return {
+            _id: fb._id,
+            rating: fb.rating,
+            username: fb.user_name,
+            userType: fb.type === "store_owner" ? "Store Owner" : "Reseller",
+            message: fb.suggestion,
+            email: fb.user_email,
+            date: new Date(fb.created_at).toLocaleDateString(),
+            replied: fb.status === "replied",
+            reply: fb.reply,
+            user_id: fb.user_id,
+            sentiment: sentiment.label,
+            sentimentScore: sentiment.score,
+          };
+        });
 
         // Calculate stats
         const totalFeedback = mappedFeedbacks.length;
@@ -131,6 +229,10 @@ export default function Feedback() {
           pendingReplies,
           repliedCount,
         });
+
+        // Calculate and set sentiment statistics
+        setSentimentStats(calculateSentimentStats(mappedFeedbacks));
+        setSentimentTrends(generateMockTrends());
       } catch (err: any) {
         console.error("Error fetching feedbacks:", err);
         setError("Failed to load feedbacks. Please try again.");
@@ -158,8 +260,7 @@ export default function Feedback() {
     if (!selectedFeedback || !replyMessage.trim()) return;
 
     try {
-      const baseUrl =
-        import.meta.env.VITE_API_URL || "https://bin-iq-backend.vercel.app/api";
+      const baseUrl = API_CONFIG.BASE_URL;
       const response = await AuthService.makeAuthenticatedRequest(
         `${baseUrl}/users/feedback/reply`,
         {
@@ -256,6 +357,28 @@ export default function Feedback() {
       header: "Email",
       searchable: true,
       render: (_, row) => row.email || "N/A",
+    },
+    {
+      key: "sentiment",
+      header: "Sentiment",
+      render: (_, row) => (
+        <div className="flex items-center gap-1">
+          {row.sentiment === "positive" ? (
+            <Smile className="w-4 h-4 text-green-600" />
+          ) : row.sentiment === "negative" ? (
+            <Frown className="w-4 h-4 text-red-600" />
+          ) : (
+            <Meh className="w-4 h-4 text-yellow-600" />
+          )}
+          <Badge variant={
+            row.sentiment === "positive" ? "default" :
+            row.sentiment === "negative" ? "destructive" :
+            "secondary"
+          }>
+            {row.sentiment ? row.sentiment.charAt(0).toUpperCase() + row.sentiment.slice(1) : "Unknown"}
+          </Badge>
+        </div>
+      ),
     },
     {
       key: "date",

@@ -28,6 +28,7 @@ import {
 import { HelpCircle, Plus, Edit, Trash2, Eye } from "lucide-react";
 import { useState, useEffect, Component, ReactNode } from "react";
 import { AuthService } from "../lib/auth";
+import { API_CONFIG } from "../lib/api";
 
 // Error Boundary Component
 class ErrorBoundary extends Component<
@@ -103,12 +104,15 @@ export default function FAQ() {
         setIsLoading(true);
         setError(null);
 
-        const baseUrl =
-          import.meta.env.VITE_API_URL ||
-          "https://bin-iq-backend.vercel.app/api";
+        const baseUrl = API_CONFIG.BASE_URL;
         const response = await AuthService.makeAuthenticatedRequest(
-          `${baseUrl}/faqs`
+          `${baseUrl}${API_CONFIG.ENDPOINTS.FAQS}`
         );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data: FAQResponse[] = await response.json();
 
         console.log("Fetched FAQs:", data); // Debug log
@@ -180,8 +184,7 @@ export default function FAQ() {
     }
 
     try {
-      const baseUrl =
-        import.meta.env.VITE_API_URL || "https://bin-iq-backend.vercel.app/api";
+      const baseUrl = API_CONFIG.BASE_URL;
       const payload = {
         question: formData.question,
         answer: formData.answer,
@@ -262,8 +265,7 @@ export default function FAQ() {
     if (!selectedFAQ) return;
 
     try {
-      const baseUrl =
-        import.meta.env.VITE_API_URL || "https://bin-iq-backend.vercel.app/api";
+      const baseUrl = API_CONFIG.BASE_URL;
       const response = await AuthService.makeAuthenticatedRequest(
         `${baseUrl}/faqs/${selectedFAQ._id}`,
         { method: "DELETE" }

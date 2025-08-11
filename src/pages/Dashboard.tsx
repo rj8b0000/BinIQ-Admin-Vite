@@ -13,6 +13,9 @@ import { Button } from "../components/ui/button";
 import { Users, Store, CreditCard, Star, MessageSquare, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AuthService } from "../lib/auth";
+import IntegrationStatus from "../components/IntegrationStatus";
+import ApiDebug from "../components/ApiDebug";
+import { API_CONFIG } from "../lib/api";
 
 // Define interfaces for API responses
 interface PaidUsersResponse {
@@ -213,14 +216,14 @@ const feedbackColumns: Column<Feedback>[] = [
     key: "created_at",
     header: "Date",
     sortable: true,
-    render: (value) => new Date(value).toLocaleDateString(),
+    render: (value) => value ? new Date(value).toLocaleDateString() : "N/A",
   },
   {
     key: "status",
     header: "Status",
     render: (value) => (
       <Badge variant={value === "replied" ? "default" : "destructive"}>
-        {value.charAt(0).toUpperCase() + value.slice(1)}
+        {value ? value.charAt(0).toUpperCase() + value.slice(1) : "Unknown"}
       </Badge>
     ),
   },
@@ -270,9 +273,8 @@ export default function Dashboard() {
         setIsLoading(true);
         setError(null);
 
-        const baseUrl =
-          import.meta.env.VITE_API_URL ||
-          "https://bin-iq-backend.vercel.app/api";
+        const baseUrl = API_CONFIG.BASE_URL;
+        console.log('Dashboard: Using API URL:', baseUrl); // Debug log
 
         // Fetch all stats concurrently
         const [
@@ -284,16 +286,23 @@ export default function Dashboard() {
           recentActivityRes,
           feedbackRes,
         ] = await Promise.all([
-          AuthService.makeAuthenticatedRequest(`${baseUrl}/stats/paid-users`),
-          AuthService.makeAuthenticatedRequest(`${baseUrl}/stats/store-owners`),
-          AuthService.makeAuthenticatedRequest(`${baseUrl}/stats/resellers`),
-          AuthService.makeAuthenticatedRequest(`${baseUrl}/stats/revenue`),
-          AuthService.makeAuthenticatedRequest(`${baseUrl}/stats/quick-stats`),
+          AuthService.makeAuthenticatedRequest(`${baseUrl}${API_CONFIG.ENDPOINTS.STATS.PAID_USERS}`),
+          AuthService.makeAuthenticatedRequest(`${baseUrl}${API_CONFIG.ENDPOINTS.STATS.STORE_OWNERS}`),
+          AuthService.makeAuthenticatedRequest(`${baseUrl}${API_CONFIG.ENDPOINTS.STATS.RESELLERS}`),
+          AuthService.makeAuthenticatedRequest(`${baseUrl}${API_CONFIG.ENDPOINTS.STATS.REVENUE}`),
+          AuthService.makeAuthenticatedRequest(`${baseUrl}${API_CONFIG.ENDPOINTS.STATS.QUICK_STATS}`),
           AuthService.makeAuthenticatedRequest(
-            `${baseUrl}/stats/recent-activity`
+            `${baseUrl}${API_CONFIG.ENDPOINTS.STATS.RECENT_ACTIVITY}`
           ),
-          AuthService.makeAuthenticatedRequest(`${baseUrl}/users/feedback`),
+          AuthService.makeAuthenticatedRequest(`${baseUrl}${API_CONFIG.ENDPOINTS.FEEDBACK}`),
         ]);
+
+        // Check all responses are ok before parsing
+        const responses = [paidUsersRes, storeOwnersRes, resellersRes, revenueRes, quickStatsRes, recentActivityRes, feedbackRes];
+        const failedResponse = responses.find(res => !res.ok);
+        if (failedResponse) {
+          throw new Error(`HTTP error! status: ${failedResponse.status}`);
+        }
 
         // Parse responses
         const paidUsersData: PaidUsersResponse = await paidUsersRes.json();
@@ -326,8 +335,7 @@ export default function Dashboard() {
 
   // Handle reply submission
   const handleReplySubmit = async (feedbackId: string, reply: string) => {
-    const baseUrl =
-      import.meta.env.VITE_API_URL || "https://bin-iq-backend.vercel.app/api";
+    const baseUrl = API_CONFIG.BASE_URL;
     try {
       const response = await AuthService.makeAuthenticatedRequest(
         `${baseUrl}/users/feedback/reply`,
@@ -430,8 +438,13 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Recent Activity and Quick Stats */}
-        <div className="grid gap-6 lg:grid-cols-2">
+        {/* API Debug (temporary) */}
+        <div className="flex justify-center">
+          <ApiDebug />
+        </div>
+
+        {/* Recent Activity, Quick Stats, and System Status */}
+        <div className="grid gap-6 lg:grid-cols-3">
           {/* Recent Feedbacks */}
           <Card>
             <CardHeader>
@@ -525,6 +538,11 @@ export default function Dashboard() {
               )}
             </CardContent>
           </Card>
+
+          {/* System Integration Status */}
+          <div className="flex justify-center">
+            <IntegrationStatus />
+          </div>
         </div>
 
         {/* Recent Registrations */}
@@ -558,7 +576,7 @@ export default function Dashboard() {
                           {activity.name}
                         </p>
                         <p className="text-sm text-muted-foreground">
-                          registered as {activity.type ? activity.type.replace("-", " ") : "Unknown"}
+                          registered as {activity.type ? activity.type.replace("-", " ") : "unknown"}
                         </p>
                       </div>
                     </div>

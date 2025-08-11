@@ -6,17 +6,20 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import StoreOwners from "./pages/StoreOwners";
-import Resellers from "./pages/Resellers";
+import Dashboard from "./pages/AdvancedDashboard";
+import Scans from "./pages/Scans";
+import StoreOwners from "./pages/StoreOwnersEnhanced";
+import Resellers from "./pages/ResellersEnhanced";
 import Subscriptions from "./pages/Subscriptions";
-import Locations from "./pages/Locations";
-import Feedback from "./pages/Feedback";
+import Locations from "./pages/LocationsEnhanced";
+import Feedback from "./pages/FeedbackEnhanced";
 import FAQ from "./pages/FAQ";
 import Settings from "./pages/Settings";
 import InitialQuestions from "./pages/InitialQuestions";
 import Notifications from "./pages/Notifications";
 import Profile from "./pages/Profile";
+import Analytics from "./pages/Analytics";
+import Marketing from "./pages/Marketing";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -38,6 +41,14 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/scans"
+                element={
+                  <ProtectedRoute>
+                    <Scans />
                   </ProtectedRoute>
                 }
               />
@@ -118,6 +129,22 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/analytics"
+                element={
+                  <ProtectedRoute>
+                    <Analytics />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/marketing"
+                element={
+                  <ProtectedRoute>
+                    <Marketing />
                   </ProtectedRoute>
                 }
               />

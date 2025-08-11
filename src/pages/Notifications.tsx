@@ -28,6 +28,7 @@ import {
 import { Bell, Plus, Eye } from "lucide-react";
 import { useState, useEffect, Component, ReactNode } from "react";
 import { AuthService } from "../lib/auth";
+import { API_CONFIG } from "../lib/api";
 
 // Error Boundary Component
 class ErrorBoundary extends Component<
@@ -111,12 +112,15 @@ export default function Notifications() {
         setIsLoading(true);
         setError(null);
 
-        const baseUrl =
-          import.meta.env.VITE_API_URL ||
-          "https://bin-iq-backend.vercel.app/api";
+        const baseUrl = API_CONFIG.BASE_URL;
         const response = await AuthService.makeAuthenticatedRequest(
-          `${baseUrl}/notifications`
+          `${baseUrl}${API_CONFIG.ENDPOINTS.NOTIFICATIONS}`
         );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data: NotificationResponse[] = await response.json();
 
         console.log("Fetched Notifications:", data); // Debug log
@@ -203,8 +207,7 @@ export default function Notifications() {
     }
 
     try {
-      const baseUrl =
-        import.meta.env.VITE_API_URL || "https://bin-iq-backend.vercel.app/api";
+      const baseUrl = API_CONFIG.BASE_URL;
       const payload = {
         heading: formData.title,
         content: formData.content,

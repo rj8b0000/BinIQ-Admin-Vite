@@ -111,6 +111,57 @@ export default function Feedback() {
     repliedCount: 0,
   });
 
+  // Helper functions for sentiment analysis
+  const analyzeSentiment = (text: string, rating: number): { label: "positive" | "neutral" | "negative", score: number } => {
+    // Simple sentiment analysis based on rating and keywords
+    const positiveWords = ["good", "great", "excellent", "amazing", "love", "perfect", "fantastic", "wonderful"];
+    const negativeWords = ["bad", "terrible", "awful", "hate", "worst", "horrible", "disappointing", "useless"];
+
+    const lowerText = text.toLowerCase();
+    const positiveCount = positiveWords.filter(word => lowerText.includes(word)).length;
+    const negativeCount = negativeWords.filter(word => lowerText.includes(word)).length;
+
+    let sentiment: "positive" | "neutral" | "negative";
+    let score: number;
+
+    if (rating >= 4 || positiveCount > negativeCount) {
+      sentiment = "positive";
+      score = rating >= 4 ? rating / 5 : 0.7;
+    } else if (rating <= 2 || negativeCount > positiveCount) {
+      sentiment = "negative";
+      score = rating <= 2 ? (5 - rating) / 5 : 0.7;
+    } else {
+      sentiment = "neutral";
+      score = 0.5;
+    }
+
+    return { label: sentiment, score };
+  };
+
+  const calculateSentimentStats = (feedbacks: FeedbackItem[]): SentimentStats => {
+    const total = feedbacks.length;
+    if (total === 0) return { positive: 0, neutral: 0, negative: 0 };
+
+    const positive = feedbacks.filter(f => f.sentiment === "positive").length;
+    const negative = feedbacks.filter(f => f.sentiment === "negative").length;
+    const neutral = total - positive - negative;
+
+    return {
+      positive: Math.round((positive / total) * 100),
+      neutral: Math.round((neutral / total) * 100),
+      negative: Math.round((negative / total) * 100),
+    };
+  };
+
+  const generateMockTrends = (): SentimentTrend[] => [
+    { month: "Jan", positive: 65, neutral: 25, negative: 10, averageRating: 4.2 },
+    { month: "Feb", positive: 70, neutral: 22, negative: 8, averageRating: 4.3 },
+    { month: "Mar", positive: 68, neutral: 24, negative: 8, averageRating: 4.1 },
+    { month: "Apr", positive: 75, neutral: 20, negative: 5, averageRating: 4.5 },
+    { month: "May", positive: 72, neutral: 23, negative: 5, averageRating: 4.4 },
+    { month: "Jun", positive: 78, neutral: 18, negative: 4, averageRating: 4.6 },
+  ];
+
   // Fetch feedback data
   useEffect(() => {
     const fetchFeedbacks = async () => {

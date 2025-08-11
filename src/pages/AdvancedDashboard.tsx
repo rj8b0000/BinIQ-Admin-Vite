@@ -376,11 +376,11 @@ export default function AdvancedDashboard() {
                   <span>{goalsProgress?.userActual || 0} / {goalsProgress?.userGoal || 0}</span>
                 </div>
                 <Progress 
-                  value={(goalsProgress.userActual / goalsProgress.userGoal) * 100} 
+                  value={goalsProgress?.userActual && goalsProgress?.userGoal ? (goalsProgress.userActual / goalsProgress.userGoal) * 100 : 0} 
                   className="h-3"
                 />
                 <p className="text-xs text-muted-foreground">
-                  {Math.round((goalsProgress.userActual / goalsProgress.userGoal) * 100)}% of monthly goal achieved
+                  {goalsProgress?.userActual && goalsProgress?.userGoal ? Math.round((goalsProgress.userActual / goalsProgress.userGoal) * 100) : 0}% of monthly goal achieved
                 </p>
               </div>
             </CardContent>
@@ -400,11 +400,11 @@ export default function AdvancedDashboard() {
                   <span>${(goalsProgress?.revenueActual || 0).toLocaleString()} / ${(goalsProgress?.revenueGoal || 0).toLocaleString()}</span>
                 </div>
                 <Progress 
-                  value={(goalsProgress.revenueActual / goalsProgress.revenueGoal) * 100} 
+                  value={goalsProgress?.revenueActual && goalsProgress?.revenueGoal ? (goalsProgress.revenueActual / goalsProgress.revenueGoal) * 100 : 0} 
                   className="h-3"
                 />
                 <p className="text-xs text-muted-foreground">
-                  {Math.round((goalsProgress.revenueActual / goalsProgress.revenueGoal) * 100)}% of monthly goal achieved
+                  {goalsProgress?.revenueActual && goalsProgress?.revenueGoal ? Math.round((goalsProgress.revenueActual / goalsProgress.revenueGoal) * 100) : 0}% of monthly goal achieved
                 </p>
               </div>
             </CardContent>

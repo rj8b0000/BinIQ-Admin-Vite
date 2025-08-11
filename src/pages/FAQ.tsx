@@ -28,6 +28,7 @@ import {
 import { HelpCircle, Plus, Edit, Trash2, Eye } from "lucide-react";
 import { useState, useEffect, Component, ReactNode } from "react";
 import { AuthService } from "../lib/auth";
+import { API_CONFIG } from "../lib/api";
 
 // Error Boundary Component
 class ErrorBoundary extends Component<

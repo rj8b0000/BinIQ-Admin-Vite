@@ -187,7 +187,7 @@ const feedbackColumns: Column<Feedback>[] = [
     sortable: true,
     render: (value) => (
       <Badge variant={value === "store-owner" ? "default" : "secondary"}>
-        {value.replace("-", " ")}
+        {value ? value.replace("-", " ") : "Unknown"}
       </Badge>
     ),
   },
@@ -569,7 +569,7 @@ export default function Dashboard() {
                           {activity.name}
                         </p>
                         <p className="text-sm text-muted-foreground">
-                          registered as {activity.type.replace("-", " ")}
+                          registered as {activity.type ? activity.type.replace("-", " ") : "unknown"}
                         </p>
                       </div>
                     </div>

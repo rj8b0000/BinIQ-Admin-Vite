@@ -526,6 +526,11 @@ export default function Dashboard() {
               )}
             </CardContent>
           </Card>
+
+          {/* System Integration Status */}
+          <div className="flex justify-center">
+            <IntegrationStatus />
+          </div>
         </div>
 
         {/* Recent Registrations */}

@@ -20,6 +20,7 @@ import {
 import DataTable, { Column } from "../components/ui/DataTable";
 import { useState, useEffect } from "react";
 import { AuthService } from "../lib/auth";
+import { API_CONFIG } from "../lib/api";
 
 // Define interfaces for API responses
 interface Subscription {
@@ -196,9 +197,7 @@ export default function Subscriptions() {
         setIsLoading(true);
         setError(null);
 
-        const baseUrl =
-          import.meta.env.VITE_API_URL ||
-          "https://bin-iq-backend.vercel.app/api";
+        const baseUrl = API_CONFIG.BASE_URL;
         const response = await AuthService.makeAuthenticatedRequest(
           `${baseUrl}/subscriptions/all`
         );

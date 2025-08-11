@@ -140,9 +140,13 @@ export default function AdvancedDashboard() {
             const data = await response.json();
             return data.data || fallback;
           }
+          // Silently return fallback for expected 404s
           return fallback;
         } catch (error) {
-          console.warn(`API call failed for ${url}, using fallback data:`, error);
+          // Don't log network errors as they're expected when APIs don't exist
+          if (!error.message.includes('Failed to fetch')) {
+            console.warn(`API call failed for ${url}, using fallback data:`, error);
+          }
           return fallback;
         }
       };

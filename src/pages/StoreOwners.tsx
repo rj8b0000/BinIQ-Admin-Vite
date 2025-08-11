@@ -391,9 +391,17 @@ export default function StoreOwners() {
         setIsLoading(true);
         setError(null);
 
-        const baseUrl =
-          import.meta.env.VITE_API_URL ||
-          "https://bin-iq-backend.vercel.app/api";
+        // Use the API_CONFIG.BASE_URL for consistent URL handling
+        const baseUrl = (() => {
+          if (window.location.hostname.includes('fly.dev') ||
+              window.location.hostname !== 'localhost') {
+            return "https://bin-iq-backend.vercel.app/api";
+          }
+          return import.meta.env.VITE_API_URL || "http://localhost:3001/api";
+        })();
+
+        console.log('StoreOwners: Using API URL:', baseUrl); // Debug log
+
         const response = await AuthService.makeAuthenticatedRequest(
           `${baseUrl}/users/all-details-store-owner`
         );

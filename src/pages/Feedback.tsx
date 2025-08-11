@@ -20,6 +20,7 @@ import {
 import { MessageSquare, Star, Reply, Eye } from "lucide-react";
 import { useState, useEffect } from "react";
 import { AuthService } from "../lib/auth";
+import { API_CONFIG } from "../lib/api";
 
 interface FeedbackItem {
   _id: string;
@@ -79,9 +80,7 @@ export default function Feedback() {
         setIsLoading(true);
         setError(null);
 
-        const baseUrl =
-          import.meta.env.VITE_API_URL ||
-          "https://bin-iq-backend.vercel.app/api";
+        const baseUrl = API_CONFIG.BASE_URL;
         const response = await AuthService.makeAuthenticatedRequest(
           `${baseUrl}/users/feedback`
         );
@@ -158,8 +157,7 @@ export default function Feedback() {
     if (!selectedFeedback || !replyMessage.trim()) return;
 
     try {
-      const baseUrl =
-        import.meta.env.VITE_API_URL || "https://bin-iq-backend.vercel.app/api";
+      const baseUrl = API_CONFIG.BASE_URL;
       const response = await AuthService.makeAuthenticatedRequest(
         `${baseUrl}/users/feedback/reply`,
         {

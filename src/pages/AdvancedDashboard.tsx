@@ -37,6 +37,7 @@ import {
   DollarSign,
   UserCheck,
   ShoppingCart,
+  Award,
 } from "lucide-react";
 
 // Interface definitions

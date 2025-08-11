@@ -286,16 +286,23 @@ export default function Dashboard() {
           recentActivityRes,
           feedbackRes,
         ] = await Promise.all([
-          AuthService.makeAuthenticatedRequest(`${baseUrl}/stats/paid-users`),
-          AuthService.makeAuthenticatedRequest(`${baseUrl}/stats/store-owners`),
-          AuthService.makeAuthenticatedRequest(`${baseUrl}/stats/resellers`),
-          AuthService.makeAuthenticatedRequest(`${baseUrl}/stats/revenue`),
-          AuthService.makeAuthenticatedRequest(`${baseUrl}/stats/quick-stats`),
+          AuthService.makeAuthenticatedRequest(`${baseUrl}${API_CONFIG.ENDPOINTS.STATS.PAID_USERS}`),
+          AuthService.makeAuthenticatedRequest(`${baseUrl}${API_CONFIG.ENDPOINTS.STATS.STORE_OWNERS}`),
+          AuthService.makeAuthenticatedRequest(`${baseUrl}${API_CONFIG.ENDPOINTS.STATS.RESELLERS}`),
+          AuthService.makeAuthenticatedRequest(`${baseUrl}${API_CONFIG.ENDPOINTS.STATS.REVENUE}`),
+          AuthService.makeAuthenticatedRequest(`${baseUrl}${API_CONFIG.ENDPOINTS.STATS.QUICK_STATS}`),
           AuthService.makeAuthenticatedRequest(
-            `${baseUrl}/stats/recent-activity`
+            `${baseUrl}${API_CONFIG.ENDPOINTS.STATS.RECENT_ACTIVITY}`
           ),
-          AuthService.makeAuthenticatedRequest(`${baseUrl}/users/feedback`),
+          AuthService.makeAuthenticatedRequest(`${baseUrl}${API_CONFIG.ENDPOINTS.FEEDBACK}`),
         ]);
+
+        // Check all responses are ok before parsing
+        const responses = [paidUsersRes, storeOwnersRes, resellersRes, revenueRes, quickStatsRes, recentActivityRes, feedbackRes];
+        const failedResponse = responses.find(res => !res.ok);
+        if (failedResponse) {
+          throw new Error(`HTTP error! status: ${failedResponse.status}`);
+        }
 
         // Parse responses
         const paidUsersData: PaidUsersResponse = await paidUsersRes.json();

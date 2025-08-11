@@ -82,8 +82,13 @@ export default function Feedback() {
 
         const baseUrl = API_CONFIG.BASE_URL;
         const response = await AuthService.makeAuthenticatedRequest(
-          `${baseUrl}/users/feedback`
+          `${baseUrl}${API_CONFIG.ENDPOINTS.FEEDBACK}`
         );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data: FeedbackResponse[] = await response.json();
 
         console.log("Fetched feedbacks:", data); // Debug log

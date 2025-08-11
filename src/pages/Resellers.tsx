@@ -289,8 +289,13 @@ export default function Resellers() {
         const baseUrl = API_CONFIG.BASE_URL;
         console.log('Resellers: Using API URL:', baseUrl); // Debug log
         const response = await AuthService.makeAuthenticatedRequest(
-          `${baseUrl}/users/all-details-resellar`
+          `${baseUrl}${API_CONFIG.ENDPOINTS.ALL_RESELLERS}`
         );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data: ResellersResponse = await response.json();
 
         if (!data.success) {

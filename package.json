@@ -10,7 +10,9 @@
     "dev:backend": "cd backend && npm run dev",
     "dev:full": "concurrently \"npm run dev:backend\" \"npm run dev\"",
     "backend:install": "cd backend && npm install",
-    "setup": "npm install && npm run backend:install"
+    "setup": "npm install && npm run backend:install",
+    "setup-check": "node setup-check.js",
+    "init-admin": "cd backend && npm run init-db"
   },
   "dependencies": {
     "axios": "^1.10.0",

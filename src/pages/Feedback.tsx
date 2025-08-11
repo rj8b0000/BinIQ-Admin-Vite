@@ -359,6 +359,28 @@ export default function Feedback() {
       render: (_, row) => row.email || "N/A",
     },
     {
+      key: "sentiment",
+      header: "Sentiment",
+      render: (_, row) => (
+        <div className="flex items-center gap-1">
+          {row.sentiment === "positive" ? (
+            <Smile className="w-4 h-4 text-green-600" />
+          ) : row.sentiment === "negative" ? (
+            <Frown className="w-4 h-4 text-red-600" />
+          ) : (
+            <Meh className="w-4 h-4 text-yellow-600" />
+          )}
+          <Badge variant={
+            row.sentiment === "positive" ? "default" :
+            row.sentiment === "negative" ? "destructive" :
+            "secondary"
+          }>
+            {row.sentiment ? row.sentiment.charAt(0).toUpperCase() + row.sentiment.slice(1) : "Unknown"}
+          </Badge>
+        </div>
+      ),
+    },
+    {
       key: "date",
       header: "Date",
       sortable: true,

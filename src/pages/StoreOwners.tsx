@@ -393,13 +393,7 @@ export default function StoreOwners() {
         setError(null);
 
         // Use the API_CONFIG.BASE_URL for consistent URL handling
-        const baseUrl = (() => {
-          if (window.location.hostname.includes('fly.dev') ||
-              window.location.hostname !== 'localhost') {
-            return "https://bin-iq-backend.vercel.app/api";
-          }
-          return import.meta.env.VITE_API_URL || "http://localhost:3001/api";
-        })();
+        const baseUrl = API_CONFIG.BASE_URL;
 
         console.log('StoreOwners: Using API URL:', baseUrl); // Debug log
 

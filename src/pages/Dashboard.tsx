@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import { AuthService } from "../lib/auth";
 import IntegrationStatus from "../components/IntegrationStatus";
 import ApiDebug from "../components/ApiDebug";
+import { API_CONFIG } from "../lib/api";
 
 // Define interfaces for API responses
 interface PaidUsersResponse {
@@ -272,9 +273,8 @@ export default function Dashboard() {
         setIsLoading(true);
         setError(null);
 
-        const baseUrl =
-          import.meta.env.VITE_API_URL ||
-          "https://bin-iq-backend.vercel.app/api";
+        const baseUrl = API_CONFIG.BASE_URL;
+        console.log('Dashboard: Using API URL:', baseUrl); // Debug log
 
         // Fetch all stats concurrently
         const [
@@ -328,8 +328,7 @@ export default function Dashboard() {
 
   // Handle reply submission
   const handleReplySubmit = async (feedbackId: string, reply: string) => {
-    const baseUrl =
-      import.meta.env.VITE_API_URL || "https://bin-iq-backend.vercel.app/api";
+    const baseUrl = API_CONFIG.BASE_URL;
     try {
       const response = await AuthService.makeAuthenticatedRequest(
         `${baseUrl}/users/feedback/reply`,

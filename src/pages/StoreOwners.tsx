@@ -427,8 +427,7 @@ export default function StoreOwners() {
     action: "approve" | "reject" | "delete",
     userId: string
   ) => {
-    const baseUrl =
-      import.meta.env.VITE_API_URL || "https://bin-iq-backend.vercel.app/api";
+    const baseUrl = API_CONFIG.BASE_URL;
     try {
       let response: Response;
       if (action === "delete") {

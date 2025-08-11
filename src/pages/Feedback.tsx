@@ -229,6 +229,10 @@ export default function Feedback() {
           pendingReplies,
           repliedCount,
         });
+
+        // Calculate and set sentiment statistics
+        setSentimentStats(calculateSentimentStats(mappedFeedbacks));
+        setSentimentTrends(generateMockTrends());
       } catch (err: any) {
         console.error("Error fetching feedbacks:", err);
         setError("Failed to load feedbacks. Please try again.");

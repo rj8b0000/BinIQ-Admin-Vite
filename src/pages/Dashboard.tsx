@@ -432,6 +432,11 @@ export default function Dashboard() {
           </div>
         )}
 
+        {/* API Debug (temporary) */}
+        <div className="flex justify-center">
+          <ApiDebug />
+        </div>
+
         {/* Recent Activity, Quick Stats, and System Status */}
         <div className="grid gap-6 lg:grid-cols-3">
           {/* Recent Feedbacks */}

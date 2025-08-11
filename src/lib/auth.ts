@@ -39,17 +39,8 @@ interface LoginRequest {
 export class AuthService {
   private static readonly TOKEN_KEY = "biniq_admin_token";
   private static readonly USER_KEY = "biniq_admin_user";
-
-  // Detect environment and use appropriate API URL
-  private static readonly API_BASE_URL = (() => {
-    // If we're in production or deployed environment, use the production API
-    if (window.location.hostname.includes('fly.dev') ||
-        window.location.hostname !== 'localhost') {
-      return "https://api.biniq.net";
-    }
-    // Otherwise use the environment variable or localhost
-    return import.meta.env.VITE_API_URL || "http://localhost:3001";
-  })();
+  private static readonly API_BASE_URL =
+    "https://api.biniq.net/api";
 
   static async login(credentials: LoginRequest): Promise<LoginResponse> {
     try {

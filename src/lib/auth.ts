@@ -40,7 +40,7 @@ export class AuthService {
   private static readonly TOKEN_KEY = "biniq_admin_token";
   private static readonly USER_KEY = "biniq_admin_user";
   private static readonly API_BASE_URL =
-    "https://bin-iq-backend.vercel.app/api";
+    import.meta.env.VITE_API_URL || "http://localhost:3001/api";
 
   static async login(credentials: LoginRequest): Promise<LoginResponse> {
     try {

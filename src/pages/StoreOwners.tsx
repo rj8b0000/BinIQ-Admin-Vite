@@ -398,8 +398,13 @@ export default function StoreOwners() {
         console.log('StoreOwners: Using API URL:', baseUrl); // Debug log
 
         const response = await AuthService.makeAuthenticatedRequest(
-          `${baseUrl}/users/all-details-store-owner`
+          `${baseUrl}${API_CONFIG.ENDPOINTS.ALL_STORE_OWNERS}`
         );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data: StoreOwnersResponse = await response.json();
 
         if (!data.success) {

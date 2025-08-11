@@ -106,8 +106,13 @@ export default function FAQ() {
 
         const baseUrl = API_CONFIG.BASE_URL;
         const response = await AuthService.makeAuthenticatedRequest(
-          `${baseUrl}/faqs`
+          `${baseUrl}${API_CONFIG.ENDPOINTS.FAQS}`
         );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data: FAQResponse[] = await response.json();
 
         console.log("Fetched FAQs:", data); // Debug log

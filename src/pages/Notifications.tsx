@@ -114,8 +114,13 @@ export default function Notifications() {
 
         const baseUrl = API_CONFIG.BASE_URL;
         const response = await AuthService.makeAuthenticatedRequest(
-          `${baseUrl}/notifications`
+          `${baseUrl}${API_CONFIG.ENDPOINTS.NOTIFICATIONS}`
         );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data: NotificationResponse[] = await response.json();
 
         console.log("Fetched Notifications:", data); // Debug log

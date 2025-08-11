@@ -199,8 +199,13 @@ export default function Subscriptions() {
 
         const baseUrl = API_CONFIG.BASE_URL;
         const response = await AuthService.makeAuthenticatedRequest(
-          `${baseUrl}/subscriptions/all`
+          `${baseUrl}${API_CONFIG.ENDPOINTS.SUBSCRIPTIONS}`
         );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data: SubscriptionsResponse = await response.json();
 
         if (!data.success) {

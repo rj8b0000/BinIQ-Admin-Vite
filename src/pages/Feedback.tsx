@@ -17,10 +17,26 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../components/ui/dialog";
-import { MessageSquare, Star, Reply, Eye } from "lucide-react";
+import { MessageSquare, Star, Reply, Eye, TrendingUp, PieChart, BarChart3, Smile, Meh, Frown } from "lucide-react";
 import { useState, useEffect } from "react";
 import { AuthService } from "../lib/auth";
 import { API_CONFIG } from "../lib/api";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
+import {
+  PieChart as RechartsPieChart,
+  Pie,
+  Cell,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+} from "recharts";
 
 interface FeedbackItem {
   _id: string;
@@ -29,6 +45,8 @@ interface FeedbackItem {
   userType: "Store Owner" | "Reseller"; // Maps to type
   message: string; // Maps to suggestion
   email: string; // Maps to user_email
+  sentiment?: "positive" | "neutral" | "negative";
+  sentimentScore?: number;
   date: string; // Maps to created_at
   replied: boolean; // Maps to status ("replied" | "pending")
   reply: string | null; // Maps to reply
@@ -56,6 +74,20 @@ interface FeedbackStats {
   repliedCount: number;
 }
 
+interface SentimentStats {
+  positive: number;
+  neutral: number;
+  negative: number;
+}
+
+interface SentimentTrend {
+  month: string;
+  positive: number;
+  neutral: number;
+  negative: number;
+  averageRating: number;
+}
+
 export default function Feedback() {
   const [feedbacks, setFeedbacks] = useState<FeedbackItem[]>([]);
   const [selectedFeedback, setSelectedFeedback] = useState<FeedbackItem | null>(
@@ -63,6 +95,12 @@ export default function Feedback() {
   );
   const [replyDialogOpen, setReplyDialogOpen] = useState(false);
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
+  const [sentimentStats, setSentimentStats] = useState<SentimentStats>({
+    positive: 0,
+    neutral: 0,
+    negative: 0,
+  });
+  const [sentimentTrends, setSentimentTrends] = useState<SentimentTrend[]>([]);
   const [replyMessage, setReplyMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

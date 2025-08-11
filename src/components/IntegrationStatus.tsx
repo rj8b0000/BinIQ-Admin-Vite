@@ -20,7 +20,11 @@ export default function IntegrationStatus() {
   const checkBackendHealth = async () => {
     setBackendStatus('checking');
     try {
-      const response = await fetch(buildApiUrl('/health'), {
+      const healthUrl = buildApiUrl('/health');
+      console.log('IntegrationStatus: Checking health at:', healthUrl);
+      console.log('IntegrationStatus: Using API base:', API_CONFIG.BASE_URL);
+
+      const response = await fetch(healthUrl, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

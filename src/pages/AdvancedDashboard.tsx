@@ -487,40 +487,84 @@ export default function AdvancedDashboard() {
             </CardContent>
           </Card>
 
-          {/* Trending Stores & Resellers */}
-          <Card>
+          {/* Enhanced Trending Stores & Resellers Widget */}
+          <Card className="col-span-1">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="w-5 h-5" />
-                Trending This Month
+              <CardTitle className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5 text-purple-600" />
+                  Top Performers This Month
+                </div>
+                <Badge variant="outline" className="bg-gradient-to-r from-purple-50 to-pink-50">
+                  Live Rankings
+                </Badge>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {trendingItems.map((item, index) => (
-                  <div key={item.id} className="flex items-center justify-between p-3 rounded-lg border">
+                  <div key={item.id} className={`flex items-center justify-between p-4 rounded-lg transition-all hover:shadow-md ${
+                    index === 0 ? 'bg-gradient-to-r from-yellow-50 to-amber-50 border-2 border-yellow-200' :
+                    index === 1 ? 'bg-gradient-to-r from-gray-50 to-slate-50 border-2 border-gray-200' :
+                    index === 2 ? 'bg-gradient-to-r from-orange-50 to-red-50 border-2 border-orange-200' :
+                    'bg-gray-50 border border-gray-200'
+                  }`}>
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-400 to-pink-400 flex items-center justify-center text-white font-bold">
-                        {index + 1}
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold ${
+                        index === 0 ? 'bg-gradient-to-r from-yellow-400 to-amber-500' :
+                        index === 1 ? 'bg-gradient-to-r from-gray-400 to-slate-500' :
+                        index === 2 ? 'bg-gradient-to-r from-orange-400 to-red-500' :
+                        'bg-gradient-to-r from-purple-400 to-pink-400'
+                      }`}>
+                        {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : index + 1}
                       </div>
                       <div>
-                        <p className="font-medium">{item.name}</p>
-                        <div className="flex items-center gap-2">
-                          <Badge variant={item.type === "store" ? "default" : "secondary"}>
-                            {item.type}
+                        <p className="font-semibold text-sm">{item.name}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <Badge variant={item.type === "store" ? "default" : "secondary"} className="text-xs">
+                            {item.type === "store" ? "🏪 Store" : "👤 Reseller"}
                           </Badge>
-                          <span className="text-sm text-muted-foreground">
-                            Score: {item.engagementScore}
-                          </span>
+                          <div className="flex items-center gap-1">
+                            <TrendingUp className="w-3 h-3 text-green-600" />
+                            <span className="text-xs font-medium text-green-600">
+                              {item.engagementScore}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
-                    <div className="text-right text-sm">
-                      <p className="font-medium">{item.sales} sales</p>
-                      <p className="text-muted-foreground">{item.views} views</p>
+                    <div className="text-right">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-1 justify-end">
+                          <span className="text-sm font-bold text-green-600">{item.sales || 0}</span>
+                          <span className="text-xs text-muted-foreground">sales</span>
+                        </div>
+                        <div className="flex items-center gap-1 justify-end">
+                          <span className="text-sm font-medium text-blue-600">{item.views || 0}</span>
+                          <span className="text-xs text-muted-foreground">views</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 ))}
+              </div>
+
+              {/* Quick Stats for Trending */}
+              <div className="mt-6 pt-4 border-t border-gray-200">
+                <div className="grid grid-cols-2 gap-4 text-center">
+                  <div className="p-3 bg-blue-50 rounded-lg">
+                    <p className="text-lg font-bold text-blue-600">
+                      {trendingItems.filter(item => item.type === "store").length}
+                    </p>
+                    <p className="text-xs text-blue-600">Top Stores</p>
+                  </div>
+                  <div className="p-3 bg-purple-50 rounded-lg">
+                    <p className="text-lg font-bold text-purple-600">
+                      {trendingItems.filter(item => item.type === "reseller").length}
+                    </p>
+                    <p className="text-xs text-purple-600">Top Resellers</p>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>

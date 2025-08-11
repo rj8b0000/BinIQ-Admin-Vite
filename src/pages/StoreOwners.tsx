@@ -415,7 +415,10 @@ export default function StoreOwners() {
         setStoreOwners(data.data);
       } catch (err: any) {
         console.error("Error fetching store owners:", err);
-        setError("Failed to load store owners. Please try again.");
+        const errorMessage = err.message.includes('Failed to connect')
+          ? `Cannot connect to API. Using URL: ${baseUrl}. ${err.message}`
+          : "Failed to load store owners. Please try again.";
+        setError(errorMessage);
       } finally {
         setIsLoading(false);
       }

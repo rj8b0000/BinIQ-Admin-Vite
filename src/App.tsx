@@ -9,7 +9,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/AdvancedDashboard";
 import Scans from "./pages/Scans";
 import StoreOwners from "./pages/StoreOwnersEnhanced";
-import Resellers from "./pages/Resellers";
+import Resellers from "./pages/ResellersEnhanced";
 import Subscriptions from "./pages/Subscriptions";
 import Locations from "./pages/Locations";
 import Feedback from "./pages/FeedbackEnhanced";

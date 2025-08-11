@@ -22,11 +22,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     // Check if user is already authenticated on app load
     const initAuth = () => {
-      if (AuthService.isAuthenticated()) {
-        const savedUser = AuthService.getUser();
-        setUser(savedUser);
+      try {
+        if (AuthService.isAuthenticated()) {
+          const savedUser = AuthService.getUser();
+          setUser(savedUser);
+        }
+      } catch (error) {
+        console.error("Auth initialization error:", error);
+        // Clear any corrupted auth data
+        AuthService.logout();
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
     initAuth();

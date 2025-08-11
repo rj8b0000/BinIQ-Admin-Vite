@@ -15,6 +15,9 @@ import {
   LogOut,
   Menu,
   X,
+  ScanLine,
+  TrendingUp,
+  Handshake,
 } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { useState } from "react";
@@ -28,18 +31,15 @@ interface SidebarItem {
 
 const sidebarItems: SidebarItem[] = [
   { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { title: "Scans", href: "/scans", icon: ScanLine },
   { title: "Store Owners", href: "/store-owners", icon: Store },
   { title: "Resellers", href: "/resellers", icon: Users },
   { title: "Subscriptions", href: "/subscriptions", icon: CreditCard },
   { title: "Locations", href: "/locations", icon: MapPin },
   { title: "Feedback", href: "/feedback", icon: MessageSquare },
   { title: "FAQ", href: "/faq", icon: HelpCircle },
-  // { title: "Settings", href: "/settings", icon: Settings },
-  // {
-  //   title: "Initial Questions",
-  //   href: "/initial-questions",
-  //   icon: ClipboardList,
-  // },
+  { title: "Analytics", href: "/analytics", icon: TrendingUp },
+  { title: "Marketing", href: "/marketing", icon: Handshake },
   { title: "Notifications", href: "/notifications", icon: Bell },
   { title: "Profile", href: "/profile", icon: User },
 ];

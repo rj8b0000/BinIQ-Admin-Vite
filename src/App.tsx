@@ -19,6 +19,7 @@ import InitialQuestions from "./pages/InitialQuestions";
 import Notifications from "./pages/Notifications";
 import Profile from "./pages/Profile";
 import Analytics from "./pages/Analytics";
+import Marketing from "./pages/Marketing";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -136,6 +137,14 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <Analytics />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/marketing"
+                element={
+                  <ProtectedRoute>
+                    <Marketing />
                   </ProtectedRoute>
                 }
               />

@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import Scans from "./pages/Scans";
 import StoreOwners from "./pages/StoreOwners";
 import Resellers from "./pages/Resellers";
 import Subscriptions from "./pages/Subscriptions";
@@ -38,6 +39,14 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/scans"
+                element={
+                  <ProtectedRoute>
+                    <Scans />
                   </ProtectedRoute>
                 }
               />

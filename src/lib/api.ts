@@ -38,7 +38,49 @@ export const API_CONFIG = {
 
     // Notifications
     NOTIFICATIONS: "/api/notifications",
-    
+
+    // Scans Management
+    SCANS: "/api/scans",
+    SCAN_BY_ID: "/api/scans/:id",
+    SCAN_UPDATE: "/api/scans/:id",
+    SCAN_APPROVE_REJECT: "/api/scans/:id/status",
+    SCAN_EXPORT: "/api/scans/export",
+    SCAN_AUDIT: "/api/scans/:id/audit",
+
+    // Store Content Moderation
+    STORE_CONTENT: "/api/stores/:id/content",
+    STORE_CONTENT_APPROVE: "/api/stores/:id/content/approve",
+    STORE_CONTENT_ROLLBACK: "/api/stores/:id/content/rollback",
+    STORE_ANALYTICS: "/api/stores/:id/analytics",
+
+    // Analytics & Trends
+    ANALYTICS: {
+      USER_GROWTH: "/api/analytics/user-growth",
+      STORE_RESELLER_TRENDS: "/api/analytics/trends",
+      REVENUE_BREAKDOWN: "/api/analytics/revenue-breakdown",
+      SENTIMENT_TRENDS: "/api/analytics/sentiment",
+      GOALS_PROGRESS: "/api/analytics/goals"
+    },
+
+    // Reseller Performance
+    RESELLER_PERFORMANCE: "/api/resellers/:id/performance",
+    RESELLER_RESOURCES: "/api/resellers/resources",
+
+    // Feedback Analytics
+    FEEDBACK_STATS: "/api/feedback/stats",
+    FEEDBACK_SENTIMENT: "/api/feedback/sentiment",
+
+    // Locations
+    LOCATIONS: "/api/locations",
+    LOCATIONS_VERIFICATION: "/api/locations/verification",
+
+    // Trending
+    TRENDING: "/api/trending",
+
+    // Partnership Subscriptions
+    PARTNERSHIP_SUBSCRIPTIONS: "/api/partnership-subscriptions",
+    ASSIGN_PARTNERSHIP_PLAN: "/api/partnership-subscriptions/assign",
+
     // Stats
     STATS: {
       PAID_USERS: "/api/stats/paid-users",

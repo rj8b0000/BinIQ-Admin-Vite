@@ -6,7 +6,11 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:full": "concurrently \"npm run dev:backend\" \"npm run dev\"",
+    "backend:install": "cd backend && npm install",
+    "setup": "npm install && npm run backend:install"
   },
   "dependencies": {
     "axios": "^1.10.0",

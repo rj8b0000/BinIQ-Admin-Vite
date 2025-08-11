@@ -291,11 +291,16 @@ export default function AdvancedDashboard() {
           </Button>
         </div>
 
-        {/* Error Display */}
+        {/* Info Display */}
         {error && (
-          <Card className="border-orange-200 bg-orange-50">
+          <Card className="border-blue-200 bg-blue-50">
             <CardContent className="p-4">
-              <p className="text-orange-600">{error}</p>
+              <div className="flex items-center gap-2">
+                <TrendingUp className="w-5 h-5 text-blue-600" />
+                <p className="text-blue-600">
+                  <strong>Demo Mode:</strong> {error}
+                </p>
+              </div>
             </CardContent>
           </Card>
         )}

@@ -192,7 +192,7 @@ export default function AdvancedDashboard() {
       setQuickStats(quickStatsData);
 
       // Show a subtle info message that we're using demo data
-      setError("Some API endpoints are not available. Displaying demo data for visualization.");
+      setError("API endpoints are not yet implemented. Displaying demo data for preview purposes.");
 
     } catch (err: any) {
       console.error("Error fetching dashboard data:", err);

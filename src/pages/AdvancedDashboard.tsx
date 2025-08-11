@@ -313,7 +313,7 @@ export default function AdvancedDashboard() {
                 <Users className="w-8 h-8 text-blue-600" />
                 <div>
                   <p className="text-sm text-muted-foreground">Total Users</p>
-                  <p className="text-2xl font-bold">{quickStats.totalUsers.toLocaleString()}</p>
+                  <p className="text-2xl font-bold">{(quickStats?.totalUsers || 0).toLocaleString()}</p>
                   <p className="text-xs text-green-600">+{quickStats.monthlyGrowth}% this month</p>
                 </div>
               </div>
@@ -326,7 +326,7 @@ export default function AdvancedDashboard() {
                 <DollarSign className="w-8 h-8 text-green-600" />
                 <div>
                   <p className="text-sm text-muted-foreground">Total Revenue</p>
-                  <p className="text-2xl font-bold">${quickStats.totalRevenue.toLocaleString()}</p>
+                  <p className="text-2xl font-bold">${(quickStats?.totalRevenue || 0).toLocaleString()}</p>
                   <p className="text-xs text-green-600">+15.2% this month</p>
                 </div>
               </div>
@@ -339,7 +339,7 @@ export default function AdvancedDashboard() {
                 <TrendingUp className="w-8 h-8 text-purple-600" />
                 <div>
                   <p className="text-sm text-muted-foreground">Growth Rate</p>
-                  <p className="text-2xl font-bold">{quickStats.monthlyGrowth}%</p>
+                  <p className="text-2xl font-bold">{quickStats?.monthlyGrowth || 0}%</p>
                   <p className="text-xs text-green-600">Monthly increase</p>
                 </div>
               </div>
@@ -352,7 +352,7 @@ export default function AdvancedDashboard() {
                 <MessageSquare className="w-8 h-8 text-orange-600" />
                 <div>
                   <p className="text-sm text-muted-foreground">Avg Sentiment</p>
-                  <p className="text-2xl font-bold">{quickStats.avgSentiment}/5</p>
+                  <p className="text-2xl font-bold">{quickStats?.avgSentiment || 0}/5</p>
                   <p className="text-xs text-green-600">User satisfaction</p>
                 </div>
               </div>
@@ -373,7 +373,7 @@ export default function AdvancedDashboard() {
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
                   <span>Progress</span>
-                  <span>{goalsProgress.userActual} / {goalsProgress.userGoal}</span>
+                  <span>{goalsProgress?.userActual || 0} / {goalsProgress?.userGoal || 0}</span>
                 </div>
                 <Progress 
                   value={(goalsProgress.userActual / goalsProgress.userGoal) * 100} 
@@ -397,7 +397,7 @@ export default function AdvancedDashboard() {
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
                   <span>Progress</span>
-                  <span>${goalsProgress.revenueActual.toLocaleString()} / ${goalsProgress.revenueGoal.toLocaleString()}</span>
+                  <span>${(goalsProgress?.revenueActual || 0).toLocaleString()} / ${(goalsProgress?.revenueGoal || 0).toLocaleString()}</span>
                 </div>
                 <Progress 
                   value={(goalsProgress.revenueActual / goalsProgress.revenueGoal) * 100} 

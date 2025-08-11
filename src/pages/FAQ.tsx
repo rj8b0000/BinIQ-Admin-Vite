@@ -179,8 +179,7 @@ export default function FAQ() {
     }
 
     try {
-      const baseUrl =
-        import.meta.env.VITE_API_URL || "https://bin-iq-backend.vercel.app/api";
+      const baseUrl = API_CONFIG.BASE_URL;
       const payload = {
         question: formData.question,
         answer: formData.answer,

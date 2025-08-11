@@ -431,8 +431,8 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Recent Activity and Quick Stats */}
-        <div className="grid gap-6 lg:grid-cols-2">
+        {/* Recent Activity, Quick Stats, and System Status */}
+        <div className="grid gap-6 lg:grid-cols-3">
           {/* Recent Feedbacks */}
           <Card>
             <CardHeader>

@@ -7,7 +7,7 @@ import { Label } from "../components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "../components/ui/dialog";
 import { Badge } from "../components/ui/badge";
-import { DataTable } from "../components/ui/DataTable";
+import DataTable from "../components/ui/DataTable";
 import { toast } from "../hooks/use-toast";
 import { AuthService } from "../lib/auth";
 import { API_CONFIG } from "../lib/api";

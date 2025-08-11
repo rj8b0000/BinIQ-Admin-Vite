@@ -141,7 +141,8 @@ export default function IntegrationStatus() {
         <div className="pt-2 border-t text-xs text-muted-foreground">
           <div className="font-medium mb-1">Backend Integration</div>
           <div>Repository: binIQ-Backend</div>
-          <div>API Base: {import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}</div>
+          <div>Environment: {window.location.hostname}</div>
+          <div>API Base: {API_CONFIG.BASE_URL}</div>
         </div>
       </CardContent>
     </Card>

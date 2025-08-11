@@ -570,6 +570,122 @@ export default function AdvancedDashboard() {
           </Card>
         </div>
 
+        {/* Trending Performance Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Top Store Performance */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Store className="w-5 h-5 text-blue-600" />
+                Store Champion
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {trendingItems.filter(item => item.type === "store")[0] && (
+                <div className="text-center space-y-3">
+                  <div className="w-16 h-16 mx-auto bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
+                    <span className="text-2xl">🏆</span>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg">{trendingItems.filter(item => item.type === "store")[0]?.name}</h3>
+                    <p className="text-sm text-muted-foreground">Leading Store This Month</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 mt-4">
+                    <div className="bg-blue-50 p-2 rounded">
+                      <p className="text-sm font-semibold text-blue-600">{trendingItems.filter(item => item.type === "store")[0]?.sales || 0}</p>
+                      <p className="text-xs text-blue-600">Sales</p>
+                    </div>
+                    <div className="bg-green-50 p-2 rounded">
+                      <p className="text-sm font-semibold text-green-600">{trendingItems.filter(item => item.type === "store")[0]?.engagementScore || 0}</p>
+                      <p className="text-xs text-green-600">Score</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Top Reseller Performance */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Users className="w-5 h-5 text-purple-600" />
+                Reseller Champion
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {trendingItems.filter(item => item.type === "reseller")[0] && (
+                <div className="text-center space-y-3">
+                  <div className="w-16 h-16 mx-auto bg-gradient-to-r from-purple-400 to-pink-500 rounded-full flex items-center justify-center">
+                    <span className="text-2xl">🌟</span>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg">{trendingItems.filter(item => item.type === "reseller")[0]?.name}</h3>
+                    <p className="text-sm text-muted-foreground">Top Reseller This Month</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 mt-4">
+                    <div className="bg-purple-50 p-2 rounded">
+                      <p className="text-sm font-semibold text-purple-600">{trendingItems.filter(item => item.type === "reseller")[0]?.sales || 0}</p>
+                      <p className="text-xs text-purple-600">Sales</p>
+                    </div>
+                    <div className="bg-pink-50 p-2 rounded">
+                      <p className="text-sm font-semibold text-pink-600">{trendingItems.filter(item => item.type === "reseller")[0]?.engagementScore || 0}</p>
+                      <p className="text-xs text-pink-600">Score</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Monthly Achievements */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Award className="w-5 h-5 text-yellow-600" />
+                Monthly Achievements
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 p-2 bg-yellow-50 rounded-lg">
+                  <span className="text-lg">🎯</span>
+                  <div>
+                    <p className="text-sm font-medium">Highest Engagement</p>
+                    <p className="text-xs text-muted-foreground">
+                      {trendingItems[0]?.name} - Score: {trendingItems[0]?.engagementScore}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 p-2 bg-green-50 rounded-lg">
+                  <span className="text-lg">💰</span>
+                  <div>
+                    <p className="text-sm font-medium">Most Sales</p>
+                    <p className="text-xs text-muted-foreground">
+                      {trendingItems.reduce((prev, curr) =>
+                        (prev.sales || 0) > (curr.sales || 0) ? prev : curr
+                      ).name}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 p-2 bg-blue-50 rounded-lg">
+                  <span className="text-lg">👁️</span>
+                  <div>
+                    <p className="text-sm font-medium">Most Viewed</p>
+                    <p className="text-xs text-muted-foreground">
+                      {trendingItems.reduce((prev, curr) =>
+                        (prev.views || 0) > (curr.views || 0) ? prev : curr
+                      ).name}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Recent Activity */}
         <Card>
           <CardHeader>

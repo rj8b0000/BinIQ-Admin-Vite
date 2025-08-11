@@ -14,6 +14,7 @@ import { Users, Store, CreditCard, Star, MessageSquare, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AuthService } from "../lib/auth";
 import IntegrationStatus from "../components/IntegrationStatus";
+import ApiDebug from "../components/ApiDebug";
 
 // Define interfaces for API responses
 interface PaidUsersResponse {

@@ -12,7 +12,7 @@ import StoreOwners from "./pages/StoreOwners";
 import Resellers from "./pages/Resellers";
 import Subscriptions from "./pages/Subscriptions";
 import Locations from "./pages/Locations";
-import Feedback from "./pages/Feedback";
+import Feedback from "./pages/FeedbackEnhanced";
 import FAQ from "./pages/FAQ";
 import Settings from "./pages/Settings";
 import InitialQuestions from "./pages/InitialQuestions";

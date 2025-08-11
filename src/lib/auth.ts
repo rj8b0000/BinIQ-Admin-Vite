@@ -45,7 +45,8 @@ export class AuthService {
     // If we're in production or deployed environment, use the production API
     if (window.location.hostname.includes('fly.dev') ||
         window.location.hostname !== 'localhost') {
-      return "https://bin-iq-backend.vercel.app/api";
+      // Note: Existing backend might not have /api prefix for all endpoints
+      return "https://bin-iq-backend.vercel.app";
     }
     // Otherwise use the environment variable or localhost
     return import.meta.env.VITE_API_URL || "http://localhost:3001/api";

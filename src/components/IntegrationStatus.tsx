@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Wifi, WifiOff, RefreshCw, Server, Database } from "lucide-react";
-import { buildApiUrl } from "../lib/api";
+import { buildApiUrl, API_CONFIG } from "../lib/api";
 
 interface HealthCheckResponse {
   status: string;

@@ -182,19 +182,24 @@ export default function Feedback() {
 
         console.log("Fetched feedbacks:", data); // Debug log
 
-        // Map API data to FeedbackItem
-        const mappedFeedbacks: FeedbackItem[] = data.map((fb, index) => ({
-          _id: fb._id,
-          rating: fb.rating,
-          username: fb.user_name,
-          userType: fb.type === "store_owner" ? "Store Owner" : "Reseller",
-          message: fb.suggestion,
-          email: fb.user_email,
-          date: new Date(fb.created_at).toLocaleDateString(),
-          replied: fb.status === "replied",
-          reply: fb.reply,
-          user_id: fb.user_id,
-        }));
+        // Map API data to FeedbackItem with sentiment analysis
+        const mappedFeedbacks: FeedbackItem[] = data.map((fb, index) => {
+          const sentiment = analyzeSentiment(fb.suggestion, fb.rating);
+          return {
+            _id: fb._id,
+            rating: fb.rating,
+            username: fb.user_name,
+            userType: fb.type === "store_owner" ? "Store Owner" : "Reseller",
+            message: fb.suggestion,
+            email: fb.user_email,
+            date: new Date(fb.created_at).toLocaleDateString(),
+            replied: fb.status === "replied",
+            reply: fb.reply,
+            user_id: fb.user_id,
+            sentiment: sentiment.label,
+            sentimentScore: sentiment.score,
+          };
+        });
 
         // Calculate stats
         const totalFeedback = mappedFeedbacks.length;

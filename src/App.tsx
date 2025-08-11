@@ -11,7 +11,7 @@ import Scans from "./pages/Scans";
 import StoreOwners from "./pages/StoreOwnersEnhanced";
 import Resellers from "./pages/ResellersEnhanced";
 import Subscriptions from "./pages/Subscriptions";
-import Locations from "./pages/Locations";
+import Locations from "./pages/LocationsEnhanced";
 import Feedback from "./pages/FeedbackEnhanced";
 import FAQ from "./pages/FAQ";
 import Settings from "./pages/Settings";

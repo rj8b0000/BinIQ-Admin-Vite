@@ -19,6 +19,7 @@ import {
 import { Users, Trash2, Phone, Mail, MapPin, User, Scan } from "lucide-react";
 import { useState, useEffect } from "react";
 import { AuthService } from "../lib/auth";
+import { API_CONFIG } from "../lib/api";
 
 // Define interfaces for API responses
 interface Reseller {
@@ -285,9 +286,8 @@ export default function Resellers() {
         setIsLoading(true);
         setError(null);
 
-        const baseUrl =
-          import.meta.env.VITE_API_URL ||
-          "https://bin-iq-backend.vercel.app/api";
+        const baseUrl = API_CONFIG.BASE_URL;
+        console.log('Resellers: Using API URL:', baseUrl); // Debug log
         const response = await AuthService.makeAuthenticatedRequest(
           `${baseUrl}/users/all-details-resellar`
         );
@@ -312,8 +312,7 @@ export default function Resellers() {
 
   // Handle delete action
   const handleAction = async (action: "delete", userId: string) => {
-    const baseUrl =
-      import.meta.env.VITE_API_URL || "https://bin-iq-backend.vercel.app/api";
+    const baseUrl = API_CONFIG.BASE_URL;
     try {
       const response = await AuthService.makeAuthenticatedRequest(
         `${baseUrl}/users/delete-account?user_id=${userId}`,
